@@ -1,32 +1,44 @@
-use bevy::prelude::*;
 use crate::components::particle::{Particle, Velocity};
+use bevy::prelude::*;
 
 pub fn update_system(
     time: Res<Time>,
     mut query: Query<(&mut Transform, &mut Velocity), With<Particle>>,
 ) {
     let delta_time = time.delta_seconds();
-    let gravity = Vec3::new(0.0, -9.81 * 100.0, 0.0);
+    let gravity = Vec3::new(0.0, -9.81 * 50.0, 0.0);
     let damping_factor = 0.99;
-    let boundary_radius = 150.0;
+    let boundary_radius = 500.0;
 
     for (mut transform, mut velocity) in query.iter_mut() {
         velocity.0 += gravity * delta_time;
         velocity.0 *= damping_factor;
 
         transform.translation += velocity.0 * delta_time;
-        check_and_place_within_bounds(&mut transform, &mut velocity, boundary_radius)
+        if !check_and_place_within_bounds(&mut transform, &mut velocity, boundary_radius) {}
     }
 }
 
-fn check_and_place_within_bounds(transform: &mut Transform, velocity: &mut Velocity, boundary_radius: f32) {
+fn check_and_place_within_bounds(
+    transform: &mut Transform,
+    velocity: &mut Velocity,
+    boundary_radius: f32,
+) -> bool {
     if transform.translation.length() > boundary_radius {
         let direction_to_origin = -transform.translation;
         let normalized_direction = direction_to_origin.normalize();
 
         transform.translation = -normalized_direction * boundary_radius;
 
-        let restitution = 0.9;
+        let restitution = 0.8;
         velocity.0 *= -restitution;
+
+        let penetration_depth =
+            boundary_radius + 5.0 - transform.translation.distance(direction_to_origin);
+        let correction = penetration_depth * normalized_direction;
+        //transform.translation += correction;
+
+        return true;
     }
+    false
 }

@@ -7,7 +7,7 @@ pub fn setup_system(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
 
     let bounding_cirlce = shapes::Circle {
-        radius: 160.0,
+        radius: 510.0,
         center: Vec2::ZERO,
     };
     commands.spawn((
@@ -26,7 +26,7 @@ pub fn setup_system(mut commands: Commands) {
         center: Vec2::ZERO,
     };
 
-    (0..20).for_each(|i| {
+    (0..100).for_each(|i| {
         commands.spawn((
             Particle { radius },
             ShapeBundle {

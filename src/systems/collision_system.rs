@@ -27,7 +27,7 @@ pub fn collision_system(
                 continue;
             }
 
-            let restitution = 1.0;
+            let restitution = 0.7;
             let impluse_mag = -(1.0 + restitution) * normal_v / 2.0;
 
             let impulse = impluse_mag * normal;
@@ -37,8 +37,8 @@ pub fn collision_system(
             let penetration_depth =
                 p_1.radius + p_2.radius - t_1.translation.distance(t_2.translation);
             let correction = (penetration_depth / 2.0) * normal;
-            t_1.translation -= correction;
-            t_2.translation += correction;
+            t_1.translation += correction;
+            t_2.translation -= correction;
         }
     }
 }
