@@ -1,0 +1,50 @@
+use std::{cmp, f32::consts::PI, intrinsics::powf32};
+
+use crate::components::particle::{Particle, Velocity};
+use bevy::prelude::*;
+
+pub fn collision_system(
+    mut query: Query<(&mut Transform, &mut Velocity, &Particle), With<Particle>>,
+) {
+    let mut particles: Vec<_> = query.iter_mut().collect();
+
+    for i in 0..particles.len() {}
+}
+
+fn smoothing_kernal(radius: f32, dist: f32) -> f32 {
+    let volume: f32 = PI * radius.powf(8.0) / 4.0;
+    let value: f32 = (radius * radius - dist).max(0.0);
+    (value * value * value) / volume
+}
+
+fn calculate_density(
+    current_particle: &Transform,
+    mut particles: Vec<(Mut<Transform>, Mut<Velocity>, &Particle)>,
+) -> f32 {
+    let mut density: f32 = 0.0;
+    let mass: f32 = 1.0;
+    let smoothing_radius: f32 = 10.0;
+
+    particles.iter_mut().for_each(|(transform, _, _)| {
+        let dist: f32 = (transform.translation - current_particle.translation).length();
+        let influence: f32 = smoothing_kernal(smoothing_radius, dist);
+        density += mass * influence;
+    });
+
+    density
+}
+
+const test: f32 = 1.0;
+
+fn calculate_property(
+    particle: &Transform,
+    mut particles: Vec<(Mut<Transform>, Mut<Velocity>, &Particle)>,
+) {
+    let mut property: f32 = 0.0;
+    particles.iter_mut().for_each(|(transform, _, _)| {
+        let dist: f32 = (transform.translation - particle.translation).length();
+        let influence: f32 = smoothing_kernal(10.0, dist);
+            let density: f32 = calculate_density(transform, particles.clone_from_slice(src));
+            property +=  test;
+    });
+}

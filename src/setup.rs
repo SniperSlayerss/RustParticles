@@ -1,13 +1,12 @@
-use crate::components::particle::{Particle, Velocity};
+use crate::components::particle::Particle;
 use bevy::prelude::*;
 use bevy_prototype_lyon::prelude::*;
-use tess::GeometryBuilderError;
 
 pub fn setup_system(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
 
     let bounding_cirlce = shapes::Circle {
-        radius: 510.0,
+        radius: 500.0,
         center: Vec2::ZERO,
     };
     commands.spawn((
@@ -18,23 +17,26 @@ pub fn setup_system(mut commands: Commands) {
         Stroke::new(Color::BLACK, 4.0),
     ));
 
-
-    let radius = 10.0;
+    let radius = 15.0;
 
     let particle = shapes::Circle {
         radius,
         center: Vec2::ZERO,
     };
 
-    (0..100).for_each(|i| {
+    (0..10).for_each(|i| {
         commands.spawn((
-            Particle { radius },
+            Particle {
+                radius,
+                velocity: Vec3::ZERO,
+                density: 0.0,
+            },
             ShapeBundle {
                 path: GeometryBuilder::build_as(&particle),
                 spatial: SpatialBundle {
                     transform: Transform::from_translation(Vec3::new(
-                        //((i as f32) - 50.0) * 4.0,
-                        -i as f32,
+                        ((i - 5) * 100) as f32,
+                        //-i as f32,
                         (-i - 100) as f32,
                         0.0,
                     )),
@@ -44,7 +46,6 @@ pub fn setup_system(mut commands: Commands) {
             },
             Fill::color(Color::WHITE),
             Stroke::new(Color::BLACK, 1.0),
-            Velocity(Vec3::new(0.0, 0.0, 0.0)),
         ));
     });
 }
