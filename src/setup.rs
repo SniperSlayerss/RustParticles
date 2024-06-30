@@ -19,7 +19,7 @@ pub fn setup_system(mut commands: Commands, parameters: Res<SimulationParameters
         Stroke::new(Color::BLACK, 4.0),
     ));
 
-    let radius = 15.0;
+    let radius = 5.0;
 
     let particle_shape = shapes::Circle {
         radius,
@@ -29,7 +29,7 @@ pub fn setup_system(mut commands: Commands, parameters: Res<SimulationParameters
     let mut rng = rand::thread_rng();
     let boundary_radius = parameters.boundary_radius;
 
-    (0..20).for_each(|_| {
+    (0..100).for_each(|_| {
         // Generate a random position within the boundary radius
         let angle = rng.gen_range(0.0..2.0 * std::f32::consts::PI);
         let distance = rng.gen_range(0.0..boundary_radius - radius);
@@ -38,9 +38,10 @@ pub fn setup_system(mut commands: Commands, parameters: Res<SimulationParameters
 
         commands.spawn((
             Particle {
-                radius,
+                position_old: Vec3::ZERO,
                 velocity: Vec3::ZERO,
-                density: 0.0,
+                acceleration: Vec3::ZERO,
+                radius,
             },
             ShapeBundle {
                 path: GeometryBuilder::build_as(&particle_shape),
