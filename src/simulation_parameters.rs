@@ -14,9 +14,9 @@ impl SimulationParameters {
         Self {
             target_density: 1000.0,
             pressure_mult: 2000.0,
-            boundary_radius: 500.0,
+            boundary_radius: 200.0,
             gravity: Vec3::new(0.0, -9.81 * 50.0, 0.0),
-            smoothing_radius: 10.0,
+            smoothing_radius: 1.0,
         }
     }
 }
